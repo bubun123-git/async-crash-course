@@ -1,53 +1,53 @@
 const posts = [
-    { title: 'post one', body: 'this is post one' },
-    { title: 'post two', body: 'this is post two' }
-  ];
-  
-  function getPosts() {
+  { title: 'post one', body: 'this is post one' },
+  { title: 'post two', body: 'this is post two' }
+];
+
+async function getPosts() {
+  let output = '';
+  for (const post of posts) {
+    output += `<li>${post.title}</li>`;
+  }
+  document.body.innerHTML = output;
+}
+
+async function createPost(post) {
+  await new Promise((resolve, reject) => {
     setTimeout(() => {
-      let output = '';
-      posts.forEach((post, index) => {
-        output = output + `<li>${post.title}</li>`;
-      });
-      document.body.innerHTML = output;
-    }, 1000);
-  }
-  
-  function createPost(post) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        posts.push(post);
-        const error = false;
-        if (!error) {
-          resolve();
-        } else {
-          reject('Error: Something went wrong');
-        }
-      }, 2000);
-    });
-  }
-  
-  function deletePost() {
-    return new Promise((resolve, reject) => {
-      if (posts.length !== 0) {
-        resolve(posts.pop());
+      posts.push(post);
+      const error = false;
+      if (!error) {
+        resolve();
       } else {
-        reject('Error: Array is empty');
+        reject('Error: Something went wrong');
       }
-    });
-  }
-  
-  async function init() {
-    try {
-      await createPost({ title: 'post three', body: 'this is post three' });
-      await getPosts();
-      await deletePost();
-    } catch (err) {
-      console.log(err);
+    }, 2000);
+  });
+}
+
+async function deletePost() {
+  const post = await new Promise((resolve, reject) => {
+    if (posts.length !== 0) {
+      resolve(posts.pop());
+    } else {
+      reject('Error: Array is empty');
     }
+  });
+  return post;
+}
+
+async function init() {
+  try {
+    await createPost({ title: 'post three', body: 'this is post three' });
+    await getPosts();
+    await deletePost();
+  } catch (err) {
+    console.log(err);
   }
-  
-  init();
+}
+
+init();
+
   
   //async/await
 //   async function init () {
